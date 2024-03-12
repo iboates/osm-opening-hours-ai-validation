@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  
+  postgis:
+    image: postgis/postgis:latest
+    environment:
+      POSTGRES_DB: o2p
+      POSTGRES_USER: o2p
+      POSTGRES_PASSWORD: o2p
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+        
+  osm2pgsql:
+    image: iboates/osm2pgsql:latest
+    environment:
+      PGPASSWORD: o2p
+    volumes:
+      - /home/isaac/PycharmProjects/restaurants/data:/data
+
+  osmium:
+    image: iboates/osmium:latest
+    volumes:
+      - /home/isaac/PycharmProjects/restaurants/data:/data
+
+  opening-hours-js-evaluator:
+    build:
+      context: ./opening-hours-js-evaluator
+    ports:
+      - "0.0.0.0:8080:3000"
+
+volumes:
+  postgis_data:
